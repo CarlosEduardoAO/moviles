@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:pmsn20232/models/carrera_model.dart';
+import 'package:pmsn20232/models/profesor_model.dart';
 import 'package:pmsn20232/models/task_models.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -42,9 +44,9 @@ class AgendaDB {
       idCarrera INTEGER, email VARCHAR(50), 
       FOREIGN KEY (idCarrera) REFERENCES tblProfesor(idCarrera);''';
 
-    db.execute(query);
     db.execute(query2);
     db.execute(query3);
+    db.execute(query);
   }
 
   Future<int> INSERT(String tblName, Map<String, dynamic> data) async {
@@ -67,5 +69,17 @@ class AgendaDB {
     var conexion = await database;
     var result = await conexion!.query('tblTareas');
     return result.map((task) => TaskModel.fromMap(task)).toList();
+  }
+
+  Future<List<Profesor>> GETALLPROFESOR() async {
+    var conexion = await database;
+    var result = await conexion!.query('tblProfesor');
+    return result.map((profesor) => Profesor.fromMap(profesor)).toList();
+  }
+
+  Future<List<Carrera>> GETALLCARRERA() async {
+    var conexion = await database;
+    var result = await conexion!.query('tblCarrera');
+    return result.map((carrera) => Carrera.fromMap(carrera)).toList();
   }
 }

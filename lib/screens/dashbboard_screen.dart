@@ -72,6 +72,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onTap: () => Navigator.pushNamed(context, '/cal'),
           ),
           ListTile(
+            leading: Icon(Icons.task_alt_outlined),
+            trailing: Icon(Icons.chevron_right),
+            title: Text('Carrera'),
+            onTap: () => Navigator.pushNamed(context, '/carrera'),
+          ),
+          ListTile(
+            leading: Icon(Icons.task_alt_outlined),
+            trailing: Icon(Icons.chevron_right),
+            title: Text('Profesor'),
+            onTap: () => Navigator.pushNamed(context, '/profesor'),
+          ),
+          ListTile(
             leading: Icon(Icons.movie),
             trailing: Icon(Icons.chevron_right),
             title: Text('Movies'),

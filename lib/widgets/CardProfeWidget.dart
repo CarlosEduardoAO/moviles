@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pmsn20232/assets/global_values.dart';
 import 'package:pmsn20232/database/agenda_db.dart';
-import 'package:pmsn20232/models/task_models.dart';
+import 'package:pmsn20232/models/profesor_model.dart';
+import 'package:pmsn20232/models/profesor_model.dart';
+import 'package:pmsn20232/screens/add_profe.dart';
 import 'package:pmsn20232/screens/add_task.dart';
 
-class CardTaskWidget extends StatelessWidget {
-  CardTaskWidget({super.key, required this.taskModel, this.agendaDB});
+class CardProfesorWidget extends StatelessWidget {
+  CardProfesorWidget({super.key, required this.profesorModel, this.agendaDB});
 
-  TaskModel taskModel;
+  Profesor profesorModel;
   AgendaDB? agendaDB;
 
   @override
@@ -19,7 +21,11 @@ class CardTaskWidget extends StatelessWidget {
       child: Row(
         children: [
           Column(
-            children: [Text(taskModel.nameTask!), Text(taskModel.dscTask!)],
+            children: [
+              Text(profesorModel.nomProfe!),
+              Text(profesorModel.email!),
+              Text(profesorModel.idCarrera! as String),
+            ],
           ),
           Expanded(child: Container()),
           Column(
@@ -28,7 +34,8 @@ class CardTaskWidget extends StatelessWidget {
                   onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddTask(taskModel: taskModel))),
+                          builder: (context) =>
+                              AddProfesor(profesorModel: profesorModel))),
                   child: Image.asset(
                     'assets/fresa.png',
                     height: 50,
@@ -40,12 +47,13 @@ class CardTaskWidget extends StatelessWidget {
                       builder: (context) {
                         return AlertDialog(
                           title: Text('Mensaje del sistema'),
-                          content: const Text('¿Deseas eliminar la tarea?'),
+                          content: const Text('¿Deseas eliminar al profesor?'),
                           actions: [
                             TextButton(
                                 onPressed: () {
                                   agendaDB!
-                                      .DELETE('tblTareas', taskModel.idTask!)
+                                      .DELETE(
+                                          'tblProfesor', profesorModel.idProfe!)
                                       .then((value) {
                                     Navigator.pop(context);
                                     GlobalValues.flagTask.value =
