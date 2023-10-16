@@ -19,7 +19,13 @@ class CardTaskWidget extends StatelessWidget {
       child: Row(
         children: [
           Column(
-            children: [Text(taskModel.nameTask!), Text(taskModel.dscTask!)],
+            children: [
+              Text(taskModel.nameTask!),
+              Text(taskModel.dscTask!),
+              Text(taskModel.sttTask!),
+              Text(taskModel.fecExpiracion!),
+              Text(taskModel.fecRecordatorio!)
+            ],
           ),
           Expanded(child: Container()),
           Column(

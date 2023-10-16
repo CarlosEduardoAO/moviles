@@ -30,8 +30,8 @@ class AgendaDB {
       nameTask VARCHAR(50),
       dscTask VARCHAR(50),
       sttTask BYTE,
-      fecExpiracion DateTime,
-      fecRecordatorio DateTime,
+      fecExpiracion DATETIME,
+      fecRecordatorio DATETIME,
       idProfesor INTEGER, FOREIGN KEY (idProfesor) REFERENCES tblProfesor(idProfe));''';
 
     String query2 = '''CREATE TABLE tblCarrera(
@@ -81,5 +81,26 @@ class AgendaDB {
     var conexion = await database;
     var result = await conexion!.query('tblCarrera');
     return result.map((carrera) => Carrera.fromMap(carrera)).toList();
+  }
+
+  Future<List<TaskModel>> ListarTareasPendientes() async {
+    var conexion = await database;
+    var result = await conexion!
+        .query('tblTareas', where: 'sttTask = ?', whereArgs: ['P']);
+    return result.map((task) => TaskModel.fromMap(task)).toList();
+  }
+
+  Future<List<TaskModel>> ListarTareasRealizadas() async {
+    var conexion = await database;
+    var result = await conexion!
+        .query('tblTareas', where: 'sttTask = ?', whereArgs: ['C']);
+    return result.map((task) => TaskModel.fromMap(task)).toList();
+  }
+
+  Future<List<TaskModel>> ListarTareasProceso() async {
+    var conexion = await database;
+    var result = await conexion!
+        .query('tblTareas', where: 'sttTask = ?', whereArgs: ['E']);
+    return result.map((task) => TaskModel.fromMap(task)).toList();
   }
 }

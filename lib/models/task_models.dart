@@ -3,8 +3,8 @@ class TaskModel {
   String? nameTask;
   String? dscTask;
   String? sttTask;
-  DateTime? fecExpiracion;
-  DateTime? fecRecordatorio;
+  String? fecExpiracion;
+  String? fecRecordatorio;
   int? idProfe;
 
   TaskModel({
