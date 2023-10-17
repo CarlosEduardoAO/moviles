@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:pmsn20232/assets/global_values.dart';
 import 'package:pmsn20232/database/agenda_db.dart';
 import 'package:pmsn20232/models/profesor_model.dart';
-import 'package:pmsn20232/models/profesor_model.dart';
 import 'package:pmsn20232/screens/add_profe.dart';
-import 'package:pmsn20232/screens/add_task.dart';
 
 class CardProfesorWidget extends StatelessWidget {
-  CardProfesorWidget({super.key, required this.profesorModel, this.agendaDB});
+  CardProfesorWidget({
+    super.key,
+    required this.profesor,
+    this.agendaDB,
+  });
 
-  Profesor profesorModel;
+  Profesor profesor;
+
   AgendaDB? agendaDB;
 
   @override
@@ -17,14 +20,14 @@ class CardProfesorWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(10),
-      decoration: const BoxDecoration(color: Colors.amber),
+      decoration: const BoxDecoration(color: Color.fromARGB(255, 7, 127, 255)),
       child: Row(
         children: [
           Column(
             children: [
-              Text(profesorModel.nomProfe!),
-              Text(profesorModel.email!),
-              Text(profesorModel.idCarrera! as String),
+              Text(profesor.nameProfe!),
+              Text(profesor.email!),
+              Text(profesor.idCarrera! as String),
             ],
           ),
           Expanded(child: Container()),
@@ -35,7 +38,7 @@ class CardProfesorWidget extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              AddProfesor(profesorModel: profesorModel))),
+                              AddProfesor(profesor: profesor))),
                   child: Image.asset(
                     'assets/fresa.png',
                     height: 50,
@@ -47,13 +50,12 @@ class CardProfesorWidget extends StatelessWidget {
                       builder: (context) {
                         return AlertDialog(
                           title: Text('Mensaje del sistema'),
-                          content: const Text('¿Deseas eliminar al profesor?'),
+                          content: const Text('¿Deseas eliminar la tarea?'),
                           actions: [
                             TextButton(
                                 onPressed: () {
                                   agendaDB!
-                                      .DELETE(
-                                          'tblProfesor', profesorModel.idProfe!)
+                                      .DELETE('tblProfesor', profesor!.idProfe!)
                                       .then((value) {
                                     Navigator.pop(context);
                                     GlobalValues.flagTask.value =

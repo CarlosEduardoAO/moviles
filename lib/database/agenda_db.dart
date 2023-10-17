@@ -36,13 +36,14 @@ class AgendaDB {
 
     String query2 = '''CREATE TABLE tblCarrera(
       idCarrera INTEGER PRIMARY KEY,
-      nameCarrera VARCHAR(50);''';
+      nameCarrera VARCHAR(50));''';
 
     String query3 = '''CREATE TABLE tblProfesor(
       idProfe INTEGER PRIMARY KEY, 
       nameProfe VARCHAR(50), 
-      idCarrera INTEGER, email VARCHAR(50), 
-      FOREIGN KEY (idCarrera) REFERENCES tblProfesor(idCarrera);''';
+      idCarrera INTEGER, 
+      email VARCHAR(50), 
+      FOREIGN KEY (idCarrera) REFERENCES tblProfesor(idCarrera));''';
 
     db.execute(query2);
     db.execute(query3);

@@ -29,7 +29,7 @@ class _ProfesorScreenState extends State<ProfesorScreen> {
         actions: [
           IconButton(
               onPressed: () =>
-                  Navigator.pushNamed(context, '/profesor').then((value) {
+                  Navigator.pushNamed(context, '/addProfe').then((value) {
                     setState(() {});
                   }),
               icon: Icon(Icons.task))
@@ -47,7 +47,7 @@ class _ProfesorScreenState extends State<ProfesorScreen> {
                         itemCount: snapshot.data!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return CardProfesorWidget(
-                              profesorModel: snapshot.data![index],
+                              profesor: snapshot.data![index],
                               agendaDB: agendaDB);
                         });
                   } else {

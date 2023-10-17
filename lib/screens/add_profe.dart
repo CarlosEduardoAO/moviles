@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pmsn20232/assets/global_values.dart';
 import 'package:pmsn20232/database/agenda_db.dart';
 import 'package:pmsn20232/models/profesor_model.dart';
+import 'package:pmsn20232/widgets/dropdown_widget.dart';
 
 class AddProfesor extends StatefulWidget {
-  AddProfesor({super.key, this.profesorModel});
+  AddProfesor({super.key, this.profesor});
 
-  Profesor? profesorModel;
+  Profesor? profesor;
 
   @override
   State<AddProfesor> createState() => _AddProfesorState();
@@ -15,70 +16,50 @@ class AddProfesor extends StatefulWidget {
 class _AddProfesorState extends State<AddProfesor> {
   TextEditingController txtConName = TextEditingController();
   TextEditingController txtConEmail = TextEditingController();
-  TextEditingController txtConEma = TextEditingController();
   TextEditingController txtConIdCarrera = TextEditingController();
 
-  String? dropDownValue = 'Pendiente';
-  List<String> dropDownValues = ['Pendiente', 'Completado', 'En Proceso'];
-
   AgendaDB? agendaDB;
+  DropDownWidget? widgetabajo;
   @override
   void initState() {
     super.initState();
     agendaDB = AgendaDB();
-    if (widget.profesorModel != null) {
-      txtConName.text = widget.profesorModel!.nomProfe!;
-      txtConEmail.text = widget.profesorModel!.email!;
-      txtConIdCarrera.text = widget.profesorModel!.idCarrera! as String;
-      /*switch (widget.profesorModel!.sttTask!) {
-      case 'C':
-        dropDownValue = 'Completado';
-        break;
-      case 'E':
-        dropDownValue = 'En Proceso';
-        break;
-      case 'P':
-        dropDownValue = 'Pendiente';
-        break;}*/
+    if (widget.profesor != null) {
+      txtConName.text = widget.profesor!.nameProfe!;
+      txtConEmail.text = widget.profesor!.email!;
+      txtConIdCarrera.text = widget.profesor!.idCarrera! as String;
+      widgetabajo = DropDownWidget(
+          values: ['Sistemas', 'Industrial', 'Gestion', 'Mecanica'],
+          controller: 'Sistemas');
+    } else {
+      widgetabajo = DropDownWidget(
+          values: ['Sistemas', 'Industrial', 'Gestion', 'Mecanica'],
+          controller: 'Sistemas');
     }
-    //dropDownValue = widget.taskModel!.sttTask!;
   }
 
   @override
   Widget build(BuildContext context) {
-    final txtNameTask = TextFormField(
+    final txtName = TextField(
       decoration: const InputDecoration(
-          label: Text('Tarea'), border: OutlineInputBorder()),
+          label: Text('Nombre profesor'), border: OutlineInputBorder()),
       controller: txtConName,
     );
-
     final txtEmail = TextField(
       decoration: const InputDecoration(
           label: Text('Email'), border: OutlineInputBorder()),
-      maxLines: 6,
       controller: txtConEmail,
     );
 
     final space = SizedBox(height: 10);
 
-    final DropdownButton ddBStatus = DropdownButton(
-        value: dropDownValue,
-        items: dropDownValues
-            .map((status) =>
-                DropdownMenuItem(value: status, child: Text(status)))
-            .toList(),
-        onChanged: (value) {
-          dropDownValue = value;
-          setState(() {});
-        });
-
     final ElevatedButton btnGuardar = ElevatedButton(
         onPressed: () {
-          if (widget.profesorModel == null) {
+          if (widget.profesor == null) {
             agendaDB!.INSERT('tblProfesor', {
-              'nomProf': txtConName.text,
+              'nameProfe': txtConName.text,
               'email': txtConEmail.text,
-              'sttTask': dropDownValue!.substring(0, 1)
+              'idCarrera': widgetabajo!.indexSelected
             }).then((value) {
               var msj = (value > 0) ? 'La insercion fue correcta' : 'Error';
               var snackBar = const SnackBar(content: Text('Profesor saved'));
@@ -87,8 +68,8 @@ class _AddProfesorState extends State<AddProfesor> {
             });
           } else {
             agendaDB!.UPDATE('tblProfesor', {
-              'idProfe': widget.profesorModel!.idProfe,
-              'nomProfe': txtConName.text,
+              'idProfe': widget.profesor!.idProfe,
+              'nameProfe': txtConName.text,
               'email': txtConEmail.text,
               //'sttTask': dropDownValue!.substring(0,1)
             }).then((value) {
@@ -104,7 +85,7 @@ class _AddProfesorState extends State<AddProfesor> {
 
     return Scaffold(
       appBar: AppBar(
-          title: widget.profesorModel == null
+          title: widget.profesor == null
               ? Text('Add Profesor')
               : Text('Update Profesor')),
       body: Padding(
@@ -112,9 +93,12 @@ class _AddProfesorState extends State<AddProfesor> {
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            txtNameTask,
+            txtName,
             space,
             txtEmail,
+            space,
+            widgetabajo!,
+            space,
             //ddBStatus,
             btnGuardar
           ],

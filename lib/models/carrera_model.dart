@@ -1,13 +1,13 @@
 class Carrera {
   int? idCarrera;
-  String? nomCarrera;
+  String? nameCarrera;
 
-  Carrera({this.idCarrera, this.nomCarrera});
+  Carrera({this.idCarrera, this.nameCarrera});
 
   factory Carrera.fromMap(Map<String, dynamic> map) {
     return Carrera(
       idCarrera: map['idCarrera'],
-      nomCarrera: map['nomCarrera'],
+      nameCarrera: map['nomCarrera'],
     );
   }
 }

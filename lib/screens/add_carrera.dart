@@ -2,108 +2,86 @@ import 'package:flutter/material.dart';
 import 'package:pmsn20232/assets/global_values.dart';
 import 'package:pmsn20232/database/agenda_db.dart';
 import 'package:pmsn20232/models/carrera_model.dart';
-import 'package:pmsn20232/models/profesor_model.dart';
 
 class AddCarrera extends StatefulWidget {
-  AddCarrera({super.key, this.carrera});
-  Carrera? carrera;
-  Profesor? profesor;
+  AddCarrera({super.key, this.carreraModel});
+
+  Carrera? carreraModel;
 
   @override
-  State<AddCarrera> createState() => _AddCarreraState();
+  State<AddCarrera> createState() => _AddTaskState();
 }
 
-class _AddCarreraState extends State<AddCarrera> {
-  TextEditingController txtConIdCarrera = TextEditingController();
-  TextEditingController txtConNomCarrera = TextEditingController();
-  TextEditingController txtConNomProfesor = TextEditingController();
-  TextEditingController txtConIdrProfesor = TextEditingController();
+class _AddTaskState extends State<AddCarrera> {
+  TextEditingController txtConName = TextEditingController();
+  TextEditingController txtConId = TextEditingController();
 
-  String? dropDownValue = 'Carreras';
-  List<String> dropDownValues = [
-    'Sistemas Computacionales',
-    'Industrial',
-    'Gestion',
-    'Bioquimica',
-    'Mecanica',
-    'Quimica',
-    'Mecatronica',
-    'Administracion',
-    'Semiconductores',
-    'Ambiental',
-    'Electronica'
-  ];
   AgendaDB? agendaDB;
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
     agendaDB = AgendaDB();
-    if (widget.carrera != null) {
-      txtConIdCarrera.text = widget.carrera!.idCarrera! as String;
-      txtConNomCarrera.text = widget.carrera!.idCarrera! as String;
-      txtConNomProfesor.text = widget.profesor!.idProfe! as String;
-      txtConIdrProfesor.text = widget.profesor!.idProfe! as String;
+    if (widget.carreraModel != null) {
+      txtConName.text = widget.carreraModel!.nameCarrera!;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final txtNameProfesor = TextFormField(
+    final txtNameCarrera = TextFormField(
       decoration: const InputDecoration(
-          label: Text('Profesor'), border: OutlineInputBorder()),
-      controller: txtConNomProfesor,
+          label: Text('Carrera'), border: OutlineInputBorder()),
+      controller: txtConName,
     );
-    final DropdownButton ddBStatus = DropdownButton(
-        value: dropDownValue,
-        items: dropDownValues
-            .map((status) =>
-                DropdownMenuItem(value: status, child: Text(status)))
-            .toList(),
-        onChanged: (value) {
-          dropDownValue = value;
-          setState(() {});
-        });
+    const space = SizedBox(
+      height: 10,
+    );
+
     final ElevatedButton btnGuardar = ElevatedButton(
         onPressed: () {
-          if (widget.carrera == null) {
+          if (widget.carreraModel == null) {
             agendaDB!.INSERT('tblCarrera', {
-              'nomProf': txtConNomProfesor.text,
-              'sttCarrera': dropDownValue!.substring(0, 1)
+              'nameCarrera': txtConName.text,
             }).then((value) {
-              var msj = (value > 0) ? 'La insercion fue correcta' : 'Error';
-              var snackBar = const SnackBar(content: Text('Carrera saved'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              var msj = (value > 0)
+                  ? 'La inserción fue exitosa!'
+                  : 'Ocurrió un error';
+              var snackbar = SnackBar(content: Text(msj));
+              ScaffoldMessenger.of(context).showSnackBar(snackbar);
               Navigator.pop(context);
             });
           } else {
             agendaDB!.UPDATE('tblCarrera', {
-              'idProfe': widget.carrera!.idCarrera,
-              'nomProfe': txtConNomCarrera.text,
-              //'sttTask': dropDownValue!.substring(0,1)
+              'idCarrera': widget.carreraModel!.idCarrera,
+              'nameCarrera': txtConName.text,
             }).then((value) {
               GlobalValues.flagTask.value = !GlobalValues.flagTask.value;
-              var msj = (value > 0) ? 'La insercion fue correcta' : 'Error';
-              var snackBar = const SnackBar(content: Text('Carrera saved'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              var msj = (value > 0)
+                  ? 'La actualización fue exitosa!'
+                  : 'Ocurrió un error';
+              var snackbar = SnackBar(content: Text(msj));
+              ScaffoldMessenger.of(context).showSnackBar(snackbar);
               Navigator.pop(context);
             });
           }
         },
-        child: Text('Save Carrera'));
+        child: Text('Save Task'));
 
     return Scaffold(
       appBar: AppBar(
-          title: widget.carrera == null
-              ? Text('Add Carrera')
-              : Text('Update Carrera')),
+        title: widget.carreraModel == null
+            ? Text('Add Task')
+            : Text('Update Task'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            txtNameProfesor,
-            //ddBStatus,
-            btnGuardar
+            txtNameCarrera,
+            space,
+            btnGuardar,
           ],
         ),
       ),

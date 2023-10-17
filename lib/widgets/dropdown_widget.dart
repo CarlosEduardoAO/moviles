@@ -4,6 +4,7 @@ class DropDownWidget extends StatefulWidget {
   String? controller = '';
   List<String> values = [];
   DropDownWidget({super.key, this.controller, required this.values});
+  int indexSelected = 0;
 
   @override
   State<DropDownWidget> createState() => _DropDownWidgetState();
@@ -12,6 +13,7 @@ class DropDownWidget extends StatefulWidget {
 class _DropDownWidgetState extends State<DropDownWidget> {
   List<String> dropDownValues = [];
   String dropDownValue = '';
+  int indexSelected = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       padding: const EdgeInsets.all(8),
       child: DropdownButtonFormField<String>(
         value: dropDownValue,
-        dropdownColor: Colors.black87,
+        dropdownColor: Color.fromARGB(255, 38, 124, 127),
         icon: const Icon(Icons.info),
         decoration: InputDecoration(
             prefixIcon: Container(
@@ -41,8 +43,13 @@ class _DropDownWidgetState extends State<DropDownWidget> {
         onChanged: (String? newValue) {
           dropDownValue = newValue!;
           widget.controller = newValue;
+          widget.indexSelected = GetIndex(newValue);
         },
       ),
     );
+  }
+
+  int GetIndex(data) {
+    return dropDownValues.indexOf(data) ?? 0;
   }
 }
