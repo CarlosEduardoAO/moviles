@@ -4,6 +4,7 @@ import 'package:pmsn20232/database/agenda_db.dart';
 import 'package:pmsn20232/models/task_models.dart';
 import 'package:pmsn20232/widgets/CardTaskWidget.dart';
 import 'package:pmsn20232/widgets/dropdown_widget.dart';
+import 'package:pmsn20232/widgets/filter_text_dialog.dart';
 
 class TaskScreen extends StatefulWidget {
   const TaskScreen({super.key});
@@ -16,6 +17,7 @@ class _TaskScreenState extends State<TaskScreen> {
   AgendaDB? agendaDB;
   List<String> dropDownValues = [];
   DropDownWidget? dropDownFilter;
+  FilterTextWidget? filterText;
   String filtro = "Todo";
 
   @override

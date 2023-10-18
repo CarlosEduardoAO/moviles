@@ -3,43 +3,60 @@ import 'package:pmsn20232/assets/global_values.dart';
 import 'package:pmsn20232/assets/styles_app.dart';
 import 'package:pmsn20232/provider/test_provider.dart';
 import 'package:pmsn20232/routes.dart';
+import 'package:pmsn20232/screens/dashbboard_screen.dart';
 import 'package:pmsn20232/screens/login_scree.dart';
+import 'package:pmsn20232/services/local_storage.dart';
+import 'package:pmsn20232/services/notificacion_services.dart';
+import 'package:pmsn20232/services/task_provider.dart';
+import 'package:pmsn20232/services/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalStorage.configurePrefs();
+  NotificationService().initNotification();
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
+  runApp(const MainApp());
 }
 
-class _MyAppState extends State<MyApp> {
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> {
+  bool isActive = false;
+
   @override
   void initState() {
+    if (LocalStorage.prefs.getBool('isActiveSession') != null) {
+      LocalStorage.prefs.getBool('isActiveSession') as bool == true
+          ? isActive = true
+          : isActive = false;
+    }
     super.initState();
-    GlobalValues().leerValor();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: GlobalValues.flagTheme,
-        builder: (context, value, _) {
-          return ChangeNotifierProvider(
-            create: (context) => TestProvider(),
-            child: MaterialApp(
-                home: LoginScreen(),
-                routes: getRoutes(),
-                theme: value
-                    ? StylesApp.darkTheme(context)
-                    : StylesApp.ligthTheme(context)
-                /*routes: {
-              '/dash' : (BuildContext context) => LoginScreen()
-            },*/
-                ),
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => TaskProvider()),
+          ChangeNotifierProvider(create: (_) => TestProvider())
+        ],
+        child: Consumer<ThemeProvider>(builder: (context, model, child) {
+          final changeTheme = Provider.of<ThemeProvider>(context);
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            routes: getRoutes(),
+            theme: !changeTheme.isLightTheme
+                ? StylesApp.ligthTheme(context)
+                : StylesApp.darkTheme(context),
+            home: isActive ? DashboardScreen() : const LoginScreen(),
           );
-        });
+        }));
   }
 }

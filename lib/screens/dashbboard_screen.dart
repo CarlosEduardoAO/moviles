@@ -1,6 +1,7 @@
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:pmsn20232/assets/global_values.dart';
+import 'package:pmsn20232/services/notificacion_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -70,6 +71,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             trailing: Icon(Icons.chevron_right),
             title: Text('Calendar'),
             onTap: () => Navigator.pushNamed(context, '/cal'),
+          ),
+          ListTile(
+            title: const Text("Notification"),
+            trailing: const Icon(Icons.notifications),
+            onTap: () async {
+              NotificationService()
+                  .showNotification(title: 'Sample title', body: 'It works!');
+            },
           ),
           ListTile(
             leading: Icon(Icons.task_alt_outlined),

@@ -58,6 +58,7 @@ class _AddTaskState extends State<AddTask> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     agendaDB = AgendaDB();
     if (widget.taskModel != null) {
       txtConName.text = widget.taskModel!.nameTask!;

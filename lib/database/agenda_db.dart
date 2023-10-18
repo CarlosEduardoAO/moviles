@@ -9,8 +9,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class AgendaDB {
-  static final nameDB = 'AGENDADB';
-  static final versionDB = 1;
+  static const nameDB = 'AGENDADB';
+  static const versionDB = 1;
 
   static Database? _database;
   Future<Database?> get database async {
@@ -69,6 +69,20 @@ class AgendaDB {
   Future<List<TaskModel>> GETALLTASK() async {
     var conexion = await database;
     var result = await conexion!.query('tblTareas');
+    return result.map((task) => TaskModel.fromMap(task)).toList();
+  }
+
+  Future<List<TaskModel>> getTaskByStatus(String status) async {
+    var conexion = await database;
+    var result = await conexion!
+        .query('tblTareas', where: 'sttTask = ?', whereArgs: [status]);
+    return result.map((task) => TaskModel.fromMap(task)).toList();
+  }
+
+  Future<List<TaskModel>> getTaskByText(String nameTask) async {
+    var conexion = await database;
+    var result = await conexion!
+        .query('tblTareas', where: "nameTask LIKE ?", whereArgs: [nameTask]);
     return result.map((task) => TaskModel.fromMap(task)).toList();
   }
 
