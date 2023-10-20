@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:pmsn20232/models/carrera_model.dart';
+import 'package:pmsn20232/models/popular_model.dart';
 import 'package:pmsn20232/models/profesor_model.dart';
 import 'package:pmsn20232/models/task_models.dart';
 import 'package:sqflite/sqflite.dart';
@@ -45,9 +46,24 @@ class AgendaDB {
       email VARCHAR(50), 
       FOREIGN KEY (idCarrera) REFERENCES tblProfesor(idCarrera));''';
 
+    String query4 = '''CREATE TABLE tblPopular(
+        backdrop_path TEXT, 
+        id INTEGER, 
+        original_language TEXT, 
+        original_title TEXT, 
+        overview TEXT, 
+        popularity REAL, 
+        poster_path TEXT, 
+        release_date TEXT, 
+        title TEXT, 
+        vote_average REAL, 
+        vote_count INTEGER
+      );''';
+
     db.execute(query2);
     db.execute(query3);
     db.execute(query);
+    db.execute(query4);
   }
 
   Future<int> INSERT(String tblName, Map<String, dynamic> data) async {
@@ -117,5 +133,17 @@ class AgendaDB {
     var result = await conexion!
         .query('tblTareas', where: 'sttTask = ?', whereArgs: ['E']);
     return result.map((task) => TaskModel.fromMap(task)).toList();
+  }
+
+  Future<List<PopularModel>> GETALLPOPULAR() async {
+    var conexion = await database;
+    var result = await conexion!.query('tblPopular');
+    return result.map((event) => PopularModel.fromMap(event)).toList();
+  }
+
+  Future<List<PopularModel>> GETPOPULAR(int id) async {
+    var conexion = await database;
+    var result = await conexion!.query('tblPopular', where: 'id=$id');
+    return result.map((event) => PopularModel.fromMap(event)).toList();
   }
 }
